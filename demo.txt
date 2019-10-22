@@ -1,0 +1,99 @@
+beat_vol = 1
+synth1_vol = 0
+synth2_vol = 0
+synth3_vol = 0
+lander_vol = 0
+tron_vol = 0
+
+use_debug false
+use_random_seed 657
+load_sample :ambi_lunar_land
+notes = (ring :b1, :b2, :e1, :e2, :b3, :e3)
+sleep 1
+
+live_loop :tron do
+  sync :beat
+  with_synth :dsaw do
+    with_fx(:slicer, phase: 0.125) do
+      with_fx(:reverb, room: 0.5, mix: 0.3) do
+        
+        n1 = (chord notes.choose, :minor).choose
+        n2 = (chord notes.choose, :minor).choose
+        
+        p = play n1, amp: tron_vol * 0.25, release: 16, note_slide: 4, cutoff: 30, cutoff_slide: 4, detune: 0.1
+        control p, note: n2, cutoff: 120
+      end
+    end
+  end
+  sleep 32
+end
+
+live_loop :foo do
+  sync :beat
+  with_fx :reverb, kill_delay: 0.2, room: 0.5 do
+    8.times do
+      use_random_seed 123
+      8.times do
+        sleep 2
+        play chord(:e2, :m7).choose, release: 1, decay: 0.5, pan: rrand(-1, 1, res: 0.9), amp: synth1_vol
+      end
+    end
+  end
+end
+
+live_loop :foo2 do
+  sync :beat
+  with_fx :reverb, kill_delay: 0.2, room: 0.3 do
+    1.times do
+      use_random_seed 234
+      64.times do
+        sleep 0.125
+        play chord(:e4, :m7).choose, release: 0.1, pan: rrand(-1, 1, res: 0.9), amp: synth2_vol
+      end
+    end
+  end
+end
+
+live_loop :foo3 do
+  sync :beat
+  with_fx :reverb, kill_delay: 0.2, room: 1 do
+    4.times do
+      use_random_seed 789
+      16.times do
+        sleep 0.25
+        play chord(:e5, :m7).choose, release: 0.3, pan: rrand(-1, 1, res: 0.9), amp: synth3_vol
+      end
+    end
+  end
+end
+
+live_loop :bar, auto_cue: false do
+  sample :ambi_lunar_land, amp: lander_vol
+  puts :comet_landing
+  sleep 64
+end
+
+live_loop :baz, auto_cue: false do
+  tick
+  sleep 0.25
+  cue :beat, count: look
+  sample :bd_haus, amp: beat_vol * 4
+  sleep 0.25
+  use_synth :fm
+  play :e2, release: 1, amp: beat_vol if factor?(look, 4)
+  
+  ##| tick
+  ##| sleep 0.25
+  ##| cue :beat, count: look
+  ##| [2, 3, 4].choose.times do
+  ##|   sample :bd_haus, amp: beat_vol * 4
+  ##|   sleep 0.25
+  ##| end
+  ##| use_synth :fm
+  ##| play :e2, release: 1, amp: beat_vol if factor?(look, 2)
+  ##| synth :noise, release: 0.051, amp: beat_vol * 2
+  ##| 8.times do
+  ##|   sleep 0.125
+  ##|   synth :noise, attack: 0.005, release: 0.005, amp: 0.25, sustain: 0.02
+  ##| end
+end
