@@ -1,0 +1,48 @@
+##| Play a tone
+##| play 60
+
+
+##| Change the pitch!
+##| play 70
+
+
+##| Play musical notes
+##| play :e4
+
+
+##| Filters!
+##| play 60, amp: 1, sustain: 1, decay: 1, pan: 0, attack: 0.5
+
+##| Use different synths
+##| use_synth :prophet
+##| play 38
+##| sleep 0.25
+##| play 50
+##| sleep 0.25
+##| play 62
+##| sleep 0.25
+
+
+##| Sample a beat!
+##| sample :loop_amen_full
+
+
+##| Iterations
+##| 12.times do
+##|   sample :drum_heavy_kick
+##|   sleep 0.4
+##| end
+
+
+##| Loop forever!
+##| loop do
+##|   sample :drum_heavy_kick
+##|   sleep 1
+##| end
+
+##| loop do
+##|   use_synth :fm
+##|   play [40, 45, 48].pick, release: 0.2
+##|   sleep 0.125
+##| end
+
